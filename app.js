@@ -9,17 +9,3 @@ const app = express();
 app.listen(PORT, () => {
   console.log(`App listening at port ${PORT}`);
 });
-
-const userSchema = new mongoose.Schema({
-  name: {},
-  avatar: {},
-});
-
-const clothingItemSchema = new mongoose.Schema({
-  name: {},
-  weather: {},
-  imageUrl: {},
-  owner: {},
-  likes: {},
-  createAt: {},
-});

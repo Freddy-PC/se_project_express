@@ -14,4 +14,4 @@ module.exports = {
   },
 };
 
-// rule 1: disallows dangling underscores in identifiers
+// rule 1: disallow dangling underscores in identifiers
