@@ -10,7 +10,8 @@ module.exports = {
     ecmaVersion: "latest",
   },
   rules: {
-    // disallows dangling underscores in identifiers
-    "no-underscore-dangler": ["error", { allow: ["foo_", "_bar"] }],
+    "no-underscore-dangler": ["error", { allow: ["_id"] }],
   },
 };
+
+// rule 1: disallows dangling underscores in identifiers
