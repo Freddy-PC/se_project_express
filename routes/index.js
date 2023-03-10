@@ -4,6 +4,7 @@ const clothingItem = require("./clothingItem");
 router.use("/items", clothingItem); // API call to items
 
 router.use((req, res) => {
+  // If no route is found
   res.status(500).send({ message: "Router not found" });
 });
 
