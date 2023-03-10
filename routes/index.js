@@ -1,7 +1,9 @@
 const router = require("express").Router(); // For different endpoints
-const clothingItem = require("./clothingItem");
+const clothingItem = require("./clothingItem"); // Calls from...
+const user = require("./user");
 
-router.use("/items", clothingItem); // API call to items
+router.use("/items", clothingItem); // API call to items from model and routes
+router.use("/users", user);
 
 router.use((req, res) => {
   // If no route is found
