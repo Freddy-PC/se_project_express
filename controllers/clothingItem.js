@@ -13,6 +13,7 @@ const createItem = (req, res) => {
             res.status(200).send({ data: item }); // display item
         })
         .catch((err) => {
+            console.log(err.message);
             handleError(err, res);
         });
 };
