@@ -18,6 +18,7 @@ const handleError = (err, res) => {
         res.status(ERROR_CODES.BadRequest).send({
             message: "Bad request, invalid data",
         });
+        return;
     }
     if (err.statusCode === 404) {
         res.status(ERROR_CODES.NotFound).send({ message: "Data not found" });
