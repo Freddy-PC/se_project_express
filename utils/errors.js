@@ -13,8 +13,10 @@ const handleErrorFail = (err, req) => {
 };
 
 // For other errors (400, 500)
+/* ValidationError is the 'err.name' value if createItem 
+   has an error in catch block */
 const handleError = (err, res) => {
-    if (err.name === "Validation Error") {
+    if (err.name === "ValidationError") {
         res.status(ERROR_CODES.BadRequest).send({
             message: "Bad request, invalid data",
         });
