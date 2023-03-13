@@ -10,7 +10,7 @@ const createItem = (req, res) => {
     ClothingItem.create({ name, weather, imageUrl, owner, createAt })
         .then((item) => {
             console.log(item);
-            res.send({ data: item }); // display item
+            res.status(200).send({ data: item }); // display item
         })
         .catch((err) => {
             handleError(err, res);
@@ -30,8 +30,11 @@ const deleteItems = (req, res) => {
     const { itemId } = req.params;
 
     ClothingItem.findByIdAndRemove(itemId)
-        .orFail(handleErrorFail)
-        .then((item) => res.status(204).send({}))
+        .orFail(() => {
+            // ClothingItem will give object
+            handleErrorFail();
+        })
+        .then(() => res.send({ message: "Item deleted!" }))
         .catch((err) => {
             handleError(err, res);
         });
@@ -46,7 +49,9 @@ const likeItem = (req, res) => {
         { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
         { new: true }
     )
-        .orFail()
+        .orFail(() => {
+            handleErrorFail();
+        })
         .then(() => res.status(204).send({}))
         .catch((err) => {
             handleError(err, res);
@@ -60,7 +65,9 @@ const dislikeItem = (req, res) => {
         { $pull: { likes: req.user._id } }, // remove _id from the array
         { new: true }
     )
-        .orFail()
+        .orFail(() => {
+            handleErrorFail();
+        })
         .then(() => res.status(204).send({}))
         .catch((err) => {
             handleError(err, res);
