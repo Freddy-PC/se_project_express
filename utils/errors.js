@@ -13,7 +13,7 @@ const handleErrorFail = (err, req) => {
 };
 
 // For other errors (400, 500)
-const handleError = (err, req) => {
+const handleError = (err, res) => {
     if (err.statusCode === 404) {
         res.status(ERROR_CODES.NotFound).send({ message: "Data not found" });
     } else {
