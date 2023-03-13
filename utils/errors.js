@@ -14,7 +14,7 @@ const handleErrorFail = (err, req) => {
 
 // For other errors (400, 500)
 const handleError = (err, res) => {
-    if (err.statusCode === 400) {
+    if (err.name === "Validation Error") {
         res.status(ERROR_CODES.BadRequest).send({
             message: "Bad request, invalid data",
         });
