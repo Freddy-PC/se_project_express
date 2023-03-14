@@ -19,8 +19,14 @@ const getUser = (req, res) => {
     const { userId } = req.params;
 
     User.findById(userId)
-        .orFail(handleErrorFail)
-        .then((item) => res.send(item)) // Returns item
+        .then((item) => {
+            if (!item) {
+                // Send the 404 error if no item
+                handleErrorFail();
+            } else {
+                res.send(item); // Returns if item exists
+            }
+        })
         .catch((err) => {
             handleError(err, res);
         });

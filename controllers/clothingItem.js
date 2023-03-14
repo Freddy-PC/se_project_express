@@ -10,7 +10,7 @@ const createItem = (req, res) => {
     ClothingItem.create({ name, weather, imageUrl, owner, createAt })
         .then((item) => {
             console.log(item);
-            res.status(200).send({ data: item }); // display item
+            res.send({ data: item }); // display item
         })
         .catch((err) => {
             // console.log(err.message);
@@ -70,7 +70,7 @@ const dislikeItem = (req, res) => {
         .orFail(() => {
             handleErrorFail();
         })
-        .then(() => res.send({ data: item }))
+        .then((item) => res.send({ data: item }))
         .catch((err) => {
             handleError(err, res);
         });
