@@ -13,8 +13,8 @@ const createItem = (req, res) => {
             res.status(200).send({ data: item }); // display item
         })
         .catch((err) => {
-            console.log(err.message);
-            console.log(err.name);
+            // console.log(err.message);
+            // console.log(err.name);
             handleError(err, res);
         });
 };
@@ -54,7 +54,7 @@ const likeItem = (req, res) => {
         .orFail(() => {
             handleErrorFail();
         })
-        .then(() => res.status(204).send({}))
+        .then((item) => res.send({ data: item }))
         .catch((err) => {
             handleError(err, res);
         });
@@ -70,7 +70,7 @@ const dislikeItem = (req, res) => {
         .orFail(() => {
             handleErrorFail();
         })
-        .then(() => res.status(204).send({}))
+        .then(() => res.send({ data: item }))
         .catch((err) => {
             handleError(err, res);
         });
