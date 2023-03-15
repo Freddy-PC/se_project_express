@@ -6,7 +6,7 @@ const ERROR_CODES = {
 };
 
 // For orfail() / if nothing found (404)
-const handleErrorFail = (err, req) => {
+const handleErrorFail = () => {
     const error = new Error("Item ID not found");
     error.statusCode = 404;
     throw error; // so catch handles error & return error
