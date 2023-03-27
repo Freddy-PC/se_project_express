@@ -1,17 +1,24 @@
 const User = require("../models/user");
 const { handleErrorFail, handleError } = require("../utils/errors");
+const { JWT_SECRET } = require("../utils/config");
+const bcrypt = require("bcryptjs"); // hash
+const jwt = require("jsonwebtoken"); // token
 
 // Create
 const createUser = (req, res) => {
-    const { name, avatar } = req.body;
-
-    User.create({ name, avatar })
-        .then((item) => {
-            res.send({ data: item }); // display item
-        })
-        .catch((err) => {
-            handleError(err, res);
-        });
+    const { name, avatar, email, password } = req.body;
+    // Check for duplicate email and throw error
+    // Hash passwords via bycrpt
+    // find email envelops all
+    return bcrypt.hash(password, 10).then((hash) => {
+        User.create({ name, avatar, email, password: hash })
+            .then((item) => {
+                res.send({ data: item }); // display item
+            })
+            .catch((err) => {
+                handleError(err, res);
+            });
+    });
 };
 
 // Return all users
@@ -41,4 +48,24 @@ const getUsers = (req, res) => {
         });
 };
 
-module.exports = { createUser, getUser, getUsers };
+// Get & authenticate 2 fields
+const login = (req, res) => {
+    // Get email & password from request body
+    const { email, password } = req.body;
+
+    // If req.body correct, create JSON web token:
+    // Called on authentif. handler from schema
+    User.findUserByCredentials(email, password)
+        .then((user) => {
+            res.send({
+                token: jwt.sign({ _id: user._id }, JWT_SECRET, {
+                    expiresIn: "7d",
+                }),
+            });
+        })
+        .catch((err) => {
+            handleError(err, res); // 401 if incorrect email or password?
+        });
+};
+
+module.exports = { createUser, getUser, getUsers, login };
