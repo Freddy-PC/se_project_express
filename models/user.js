@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true, // NO duplicates
         validate: {
             validator(v) {
                 return validator.isURL(v);
@@ -42,5 +43,30 @@ const userSchema = new mongoose.Schema({
         },
     },
 });
+
+// authentification handler for user schema
+userSchema.statics.findUserByCredentials = function findUserByCredentials(
+    email,
+    password
+) {
+    return this.findOne({ email }) // this = User model
+        .then((user) => {
+            // not found - rejecting the promise
+            if (!user) {
+                return Promise.reject(new Error("Incorrect email or password"));
+            }
+
+            // found - comparing hashes + error handling
+            return bcrypt.compare(password, user.password).then((matched) => {
+                if (!matched) {
+                    return Promise.reject(
+                        new Error("Incorrect email or password")
+                    );
+                }
+
+                return user;
+            });
+        });
+};
 
 module.exports = mongoose.model("users", userSchema);
