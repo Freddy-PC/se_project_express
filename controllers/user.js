@@ -21,8 +21,8 @@ const createUser = (req, res) => {
     });
 };
 
-// Return all users
-const getUser = (req, res) => {
+// Return one user
+const getCurrentUser = (req, res) => {
     const { userId } = req.params;
 
     User.findById(userId)
@@ -39,14 +39,8 @@ const getUser = (req, res) => {
         });
 };
 
-// Return one user
-const getUsers = (req, res) => {
-    User.find({})
-        .then((items) => res.send(items))
-        .catch((err) => {
-            handleError(err, res);
-        });
-};
+// Update profie
+const updateUser = (req, res) => {};
 
 // Get & authenticate 2 fields
 const login = (req, res) => {
@@ -68,4 +62,13 @@ const login = (req, res) => {
         });
 };
 
-module.exports = { createUser, getUser, getUsers, login };
+// // Return all
+// const getUsers = (req, res) => {
+//     User.find({})
+//         .then((items) => res.send(items))
+//         .catch((err) => {
+//             handleError(err, res);
+//         });
+// };
+
+module.exports = { createUser, getCurrentUser, login };
