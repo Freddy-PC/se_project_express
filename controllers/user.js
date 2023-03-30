@@ -40,9 +40,6 @@ const getCurrentUser = (req, res) => {
         });
 };
 
-// Update profie
-const updateUser = (req, res) => {};
-
 // Get & authenticate 2 fields
 const login = (req, res) => {
     // Get email & password from request body
@@ -63,6 +60,24 @@ const login = (req, res) => {
         });
 };
 
+// Update profie
+const updateUser = (req, res) => {
+    const { name, avatar, userId } = req.body;
+
+    User.findByIdAndUpdate(
+        { userId },
+        { name, avatar },
+        {
+            new: true,
+            runValidators: true,
+        }
+    )
+        .then((user) => res.send({ data: user }))
+        .catch((err) => {
+            handleError(err, res); // 401 if incorrect email or password?
+        });
+};
+
 // // Return all
 // const getUsers = (req, res) => {
 //     User.find({})
@@ -72,4 +87,4 @@ const login = (req, res) => {
 //         });
 // };
 
-module.exports = { createUser, getCurrentUser, login };
+module.exports = { createUser, getCurrentUser, login, updateUser };
