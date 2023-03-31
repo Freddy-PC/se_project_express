@@ -36,7 +36,13 @@ const deleteItems = (req, res) => {
             // ClothingItem will give object
             handleErrorFail();
         })
-        .then(() => res.send({ message: "Item deleted!" }))
+        .then((item) => {
+            // If ownerId and current user match...
+            if (item.owner.equals(req.user._id)) {
+                return item.remove(() => res.send({ ClothingItem: item }));
+            }
+            return res.status(403).send({ message: "Permission denied" });
+        })
         .catch((err) => {
             handleError(err, res);
         });
