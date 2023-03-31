@@ -67,14 +67,11 @@ const updateUser = (req, res) => {
     User.findByIdAndUpdate(
         { userId },
         { name, avatar },
-        {
-            new: true,
-            runValidators: true,
-        }
+        { new: true, runValidators: true }
     )
         .then((user) => res.send({ data: user }))
         .catch((err) => {
-            handleError(err, res); // 401 if incorrect email or password?
+            handleError(err, res);
         });
 };
 
