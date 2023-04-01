@@ -8,25 +8,34 @@ const { JWT_SECRET } = require("../utils/config");
 // Create
 const createUser = (req, res) => {
     const { name, avatar, email, password } = req.body;
-    // Check for duplicate email and throw error
+    // Check for duplicate email and throw error???
+
     // Hash passwords via bycrpt
-    // find email envelops all
-    return bcrypt.hash(password, 10).then((hash) => {
-        User.create({ name, avatar, email, password: hash })
-            .then((item) => {
-                res.send({ data: item }); // display item
-            })
-            .catch((err) => {
-                handleError(err, res);
-            });
-    });
+    return bcrypt
+        .hash(password, 10)
+        .then((hash) => {
+            User.create({ name, avatar, email, password: hash })
+                .then((item) => {
+                    res.send({
+                        // Only displays these 'items' of item
+                        name: item.name,
+                        avatar: item.avatar,
+                        email: item.email,
+                    });
+                })
+                .catch((err) => {
+                    handleError(err, res);
+                });
+        })
+        .catch((err) => {
+            handleError(err, res);
+        });
 };
 
 // Return one user
 const getCurrentUser = (req, res) => {
-    const { userId } = req.params;
-
-    User.findById(userId)
+    // If accessible after authorization (auth)
+    User.findById(req.user._id)
         .then((item) => {
             if (!item) {
                 // Send the 404 error if no item
@@ -62,10 +71,11 @@ const login = (req, res) => {
 
 // Update profie
 const updateUser = (req, res) => {
-    const { name, avatar, userId } = req.body;
+    const { name, avatar } = req.body;
 
+    // Id is availabe after auth.
     User.findByIdAndUpdate(
-        { userId },
+        req.user._id,
         { name, avatar },
         { new: true, runValidators: true }
     )
