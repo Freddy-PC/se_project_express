@@ -11,11 +11,10 @@ const auth = require("../middlewares/auth");
 
 // Create
 router.post("/", auth, createItem);
-// Get
-router.get("/", auth, getItems);
+// Get --> no authorization needed
+router.get("/", getItems);
 // Delete = '/items/:itemId'
 router.delete("/:itemId", auth, deleteItems);
-
 // Like
 router.put("/:itemId/likes", auth, likeItem);
 // Dislike
