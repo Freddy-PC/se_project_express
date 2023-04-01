@@ -13,7 +13,6 @@ const createItem = (req, res) => {
 
     ClothingItem.create({ name, weather, imageUrl, owner, createAt })
         .then((item) => {
-            console.log(item);
             res.send({ data: item }); // display item
         })
         .catch((err) => {
