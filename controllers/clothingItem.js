@@ -1,5 +1,9 @@
 const ClothingItem = require("../models/clothingItem");
-const { handleErrorFail, handleError } = require("../utils/errors");
+const {
+    handleErrorFail,
+    handleError,
+    handleForbiddenError,
+} = require("../utils/errors");
 
 // Create/c
 const createItem = (req, res) => {
@@ -21,7 +25,7 @@ const createItem = (req, res) => {
 // Get/r
 const getItems = (req, res) => {
     ClothingItem.find({})
-        .then((items) => res.status(200).send(items))
+        .then((items) => res.send(items))
         .catch((err) => {
             handleError(err, res);
         });
@@ -31,17 +35,19 @@ const getItems = (req, res) => {
 const deleteItems = (req, res) => {
     const { itemId } = req.params;
 
-    ClothingItem.findByIdAndRemove(itemId)
+    ClothingItem.findById(itemId)
         .orFail(() => {
             // ClothingItem will give object
             handleErrorFail();
         })
         .then((item) => {
             // If ownerId and current user match...
+            // DeleteOne supported by Mongoose
             if (item.owner.equals(req.user._id)) {
-                return item.remove(() => res.send({ ClothingItem: item }));
+                item.deleteOne(() => res.send({ ClothingItem: item }));
             }
-            return res.status(403).send({ message: "Permission denied" });
+            // If not same user... (403)
+            handleForbiddenError();
         })
         .catch((err) => {
             handleError(err, res);
