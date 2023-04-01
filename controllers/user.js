@@ -8,7 +8,7 @@ const { JWT_SECRET } = require("../utils/config");
 // Create
 const createUser = (req, res) => {
     const { name, avatar, email, password } = req.body;
-    // Check for duplicate email and throw error???
+    // Check for duplicate email (409)?? Inside then()??
 
     // Hash passwords via bycrpt
     return bcrypt
