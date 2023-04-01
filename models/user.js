@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
         unique: true, // NO duplicates
         validate: {
             validator(v) {
-                return validator.isURL(v);
+                return validator.isEmail(v);
             },
             message: "You must enter a valid email",
         },
@@ -37,12 +37,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         select: false,
-        validate: {
-            validator(v) {
-                return validator.isURL(v);
-            },
-            message: "You must enter a valid password",
-        },
     },
 });
 
