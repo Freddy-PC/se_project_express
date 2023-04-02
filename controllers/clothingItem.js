@@ -1,9 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
-const {
-    handleErrorFail,
-    handleError,
-    handleForbiddenError,
-} = require("../utils/errors");
+const { handleErrorFail, handleError } = require("../utils/errors");
 
 // Create/c
 const createItem = (req, res) => {
@@ -41,12 +37,14 @@ const deleteItems = (req, res) => {
         })
         .then((item) => {
             // If ownerId and current user match...
-            // DeleteOne supported by Mongoose
+            // DeleteOne supported by Mongoose & return to handle errors
             if (item.owner.equals(req.user._id)) {
-                item.deleteOne(() => res.send({ ClothingItem: item }));
+                item.deleteOne()
+                    .then(() => res.send({ ClothingItem: item }))
+                    .catch((err) => {
+                        handleError(err, res);
+                    });
             }
-            // If not same user... (403)
-            handleForbiddenError();
         })
         .catch((err) => {
             handleError(err, res);
