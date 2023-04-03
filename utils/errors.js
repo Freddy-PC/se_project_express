@@ -15,6 +15,13 @@ const handleErrorFail = () => {
     throw error; // so catch handles error & return error
 };
 
+// Refuse to authorize request (403)
+const handleForbiddenError = () => {
+    const error = new Error("Invalid user authorization");
+    error.status = 403;
+    throw error;
+};
+
 // For other errors
 const handleError = (err, res) => {
     // 400
@@ -58,4 +65,5 @@ module.exports = {
     ERROR_CODES,
     handleErrorFail,
     handleError,
+    handleForbiddenError,
 };

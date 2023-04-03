@@ -1,5 +1,9 @@
 const ClothingItem = require("../models/clothingItem");
-const { handleErrorFail, handleError } = require("../utils/errors");
+const {
+    handleErrorFail,
+    handleError,
+    handleForbiddenError,
+} = require("../utils/errors");
 
 // Create/c
 const createItem = (req, res) => {
@@ -45,6 +49,9 @@ const deleteItems = (req, res) => {
                         handleError(err, res);
                     });
             }
+            // I thought the 403 error was already handled above by the
+            // catch block??
+            handleForbiddenError();
         })
         .catch((err) => {
             handleError(err, res);
