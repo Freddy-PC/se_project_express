@@ -42,16 +42,17 @@ const deleteItems = (req, res) => {
         .then((item) => {
             // If ownerId and current user match...
             // DeleteOne supported by Mongoose & return to handle errors
+            // handle the possible errors during the deletion
             if (item.owner.equals(req.user._id)) {
                 item.deleteOne()
                     .then(() => res.send({ ClothingItem: item }))
                     .catch((err) => {
                         handleError(err, res);
                     });
+            } else {
+                handleForbiddenError();
+                // errors if condition 'if' not met
             }
-            // I thought the 403 error was already handled above by the
-            // catch block??
-            handleForbiddenError();
         })
         .catch((err) => {
             handleError(err, res);
