@@ -21,7 +21,6 @@ const createUser = (req, res) => {
                         name: item.name,
                         avatar: item.avatar,
                         email: item.email,
-                        _id: item._id,
                     });
                 })
                 .catch((err) => {
