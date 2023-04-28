@@ -76,7 +76,6 @@ const login = (req, res) => {
 // Update profie
 const updateUser = (req, res) => {
     const { name, avatar } = req.body;
-
     // Id is availabe after auth.
     User.findByIdAndUpdate(
         req.user._id,
