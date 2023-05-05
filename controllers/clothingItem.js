@@ -1,11 +1,10 @@
 const ClothingItem = require("../models/clothingItem");
-const {
-    handleErrorFail,
-    handleError,
-    handleForbiddenError,
-} = require("../utils/errors");
 
-// Create/c
+const { BadRequestError } = require("../utils/errors/BadRequestError");
+const { ForbiddenError } = require("../utils/errors/ForbiddenError");
+const { NotFoundError } = require("../utils/errors/NotFoundError");
+
+// Create card
 const createItem = (req, res) => {
     const { name, weather, imageUrl } = req.body;
     const owner = req.user._id; // same as field in model
@@ -16,46 +15,45 @@ const createItem = (req, res) => {
             res.send({ data: item }); // display item
         })
         .catch((err) => {
-            // console.log(err.message);
-            // console.log(err.name);
-            handleError(err, res);
+            if (err.name === "ValidationError") {
+                next(new BadRequestError("Invalid data, Bad request"));
+            }
+            next(err);
         });
 };
-// Get/r
+// Get
 const getItems = (req, res) => {
     ClothingItem.find({})
         .then((items) => res.send(items))
         .catch((err) => {
-            handleError(err, res);
+            next(err);
         });
 };
 
-// Delete/d
+// Delete
 const deleteItems = (req, res) => {
     const { itemId } = req.params;
 
     ClothingItem.findById(itemId)
-        .orFail(() => {
-            // ClothingItem will give object
-            handleErrorFail();
-        })
         .then((item) => {
             // If ownerId and current user match...
-            // DeleteOne supported by Mongoose & return to handle errors
-            // handle the possible errors during the deletion
+            if (!item) {
+                next(new NotFoundError("Item not found"));
+            }
             if (item.owner.equals(req.user._id)) {
                 item.deleteOne()
                     .then(() => res.send({ ClothingItem: item }))
-                    .catch((err) => {
-                        handleError(err, res);
+                    .catch(() => {
+                        // If item owner is not the requested user..
+                        next(new ForbiddenError("Invalid user authorization"));
                     });
-            } else {
-                handleForbiddenError();
-                // errors if condition 'if' not met
             }
         })
         .catch((err) => {
-            handleError(err, res);
+            if (err.name === "CastError") {
+                next(new BadRequestError("Invalid item ID"));
+            }
+            next(err);
         });
 };
 
@@ -68,12 +66,18 @@ const likeItem = (req, res) => {
         { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
         { new: true }
     )
-        .orFail(() => {
-            handleErrorFail();
+        .then((item) => {
+            if (!item) {
+                throw next(new NotFoundError("Card not found"));
+            } else {
+                res.send({ data: item });
+            }
         })
-        .then((item) => res.send({ data: item }))
         .catch((err) => {
-            handleError(err, res);
+            if (err.name === "CastError") {
+                next(new BadRequestError("Bad request, invalid data ID"));
+            }
+            next(err);
         });
 };
 // Dislike an item
@@ -84,12 +88,18 @@ const dislikeItem = (req, res) => {
         { $pull: { likes: req.user._id } }, // remove _id from the array
         { new: true }
     )
-        .orFail(() => {
-            handleErrorFail();
+        .then((item) => {
+            if (!item) {
+                throw next(new NotFoundError("Card not found"));
+            } else {
+                res.send({ data: item });
+            }
         })
-        .then((item) => res.send({ data: item }))
         .catch((err) => {
-            handleError(err, res);
+            if (err.name === "CastError") {
+                next(new BadRequestError("Bad request, invalid data ID"));
+            }
+            next(err);
         });
 };
 

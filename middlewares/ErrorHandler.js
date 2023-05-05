@@ -7,4 +7,4 @@ const ErrorHandler = (err, res, req, next) => {
 module.exports = ErrorHandler;
 
 // class error handlers cover: 400, 401, 403, 404 & 409
-// if none, then 500
+// if none, then 500 from other

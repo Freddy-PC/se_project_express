@@ -4,12 +4,16 @@ require("dotenv").config();
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const User = require("../models/user");
-const { handleErrorFail, handleError } = require("../utils/errors");
+
+const { BadRequestError } = require("../utils/errors/BadRequestError");
+const { UnauthorizedError } = require("../utils/errors/UnauthorizedError");
+const { NotFoundError } = require("../utils/errors/NotFoundError");
+const { ConflictError } = require("../utils/errors/ConflictError");
+// 11000 needs to be set?
 
 // Create
 const createUser = (req, res) => {
     const { name, avatar, email, password } = req.body;
-    // Check for duplicate email (409)
     // Hash passwords via bycrpt
     return bcrypt
         .hash(password, 10)
@@ -17,18 +21,28 @@ const createUser = (req, res) => {
             User.create({ name, avatar, email, password: hash })
                 .then((item) => {
                     res.send({
-                        // Only displays these 'items' of item
                         name: item.name,
                         avatar: item.avatar,
                         email: item.email,
                     });
                 })
                 .catch((err) => {
-                    handleError(err, res);
+                    // Check for duplicate email (409)
+                    if (err.code === 11000) {
+                        console.log(err.code === 11000);
+                        next(
+                            new ConflictError("User with email already exists")
+                        );
+                    }
+                    // Incorrect data
+                    if (err.name === "ValidationError") {
+                        next(new BadRequestError("Bad request, invalid data"));
+                    }
+                    next(err);
                 });
         })
         .catch((err) => {
-            handleError(err, res);
+            next(err);
         });
 };
 
@@ -36,16 +50,19 @@ const createUser = (req, res) => {
 const getCurrentUser = (req, res) => {
     // If accessible after authorization (auth)
     User.findById(req.user._id)
-        .then((item) => {
-            if (!item) {
-                // Send the 404 error if no item
-                handleErrorFail();
+        .then((user) => {
+            if (!user) {
+                next(new NotFoundError("User not found"));
             } else {
-                res.send(item); // Returns if item exists
+                res.send(user); // Returns if item exists
             }
         })
         .catch((err) => {
-            handleError(err, res);
+            // Can't create an ObjectID from your request body
+            if (err.name === "CastError") {
+                next(new BadRequestError("Bad request, invalid data ID"));
+            }
+            next(err);
         });
 };
 
@@ -68,8 +85,8 @@ const login = (req, res) => {
                 ),
             });
         })
-        .catch((err) => {
-            handleError(err, res); // 401 if incorrect email or password?
+        .catch(() => {
+            next(new UnauthorizedError("Incorrect email or password"));
         });
 };
 
@@ -84,17 +101,11 @@ const updateUser = (req, res) => {
     )
         .then((user) => res.send({ data: user }))
         .catch((err) => {
-            handleError(err, res);
+            if (err.name === "ValidationError") {
+                next(new BadRequestError("Bad request, invalid data"));
+            }
+            next(err);
         });
 };
-
-// // Return all
-// const getUsers = (req, res) => {
-//     User.find({})
-//         .then((items) => res.send(items))
-//         .catch((err) => {
-//             handleError(err, res);
-//         });
-// };
 
 module.exports = { createUser, getCurrentUser, login, updateUser };
