@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors"); // Connect front & back end
 const { login, createUser } = require("./controllers/user");
 const ErrorHandler = require("./middlewares/ErrorHandler");
+const { errors } = require("celebrate");
 
 const { PORT = 3001 } = process.env;
 const app = express();
@@ -20,6 +21,7 @@ app.post("/signin", login);
 app.post("/signup", createUser);
 
 app.use(routes);
+app.use(errors());
 app.use(ErrorHandler);
 
 app.listen(PORT, () => {
