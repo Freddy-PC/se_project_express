@@ -6,6 +6,10 @@ const { login, createUser } = require("./controllers/user");
 const ErrorHandler = require("./middlewares/ErrorHandler");
 const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const {
+    createUserValidation,
+    loginValidation,
+} = require("./middlewares/validation");
 
 const { PORT = 3001 } = process.env;
 const app = express();
@@ -18,8 +22,15 @@ mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 const routes = require("./routes");
 
 app.use(express.json());
-app.post("/signin", login);
-app.post("/signup", createUser);
+app.post("/signin", loginValidation, login);
+app.post("/signup", createUserValidation, createUser);
+
+// Why remove this code after passing the review???
+app.get("/crash-test", () => {
+    setTimeout(() => {
+        throw new Error("Server will crash now");
+    }, 0);
+});
 
 app.use(requestLogger);
 app.use(routes);
