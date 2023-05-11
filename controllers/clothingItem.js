@@ -5,7 +5,7 @@ const { ForbiddenError } = require("../utils/errors/ForbiddenError");
 const { NotFoundError } = require("../utils/errors/NotFoundError");
 
 // Create card
-const createItem = (req, res) => {
+const createItem = (req, res, next) => {
     const { name, weather, imageUrl } = req.body;
     const owner = req.user._id; // same as field in model
     const createAt = Date.now();
@@ -22,7 +22,7 @@ const createItem = (req, res) => {
         });
 };
 // Get
-const getItems = (req, res) => {
+const getItems = (req, res, next) => {
     ClothingItem.find({})
         .then((items) => res.send(items))
         .catch((err) => {
@@ -31,7 +31,7 @@ const getItems = (req, res) => {
 };
 
 // Delete
-const deleteItems = (req, res) => {
+const deleteItems = (req, res, next) => {
     const { itemId } = req.params;
 
     ClothingItem.findById(itemId)
@@ -58,7 +58,7 @@ const deleteItems = (req, res) => {
 };
 
 // Like an item
-const likeItem = (req, res) => {
+const likeItem = (req, res, next) => {
     const { itemId } = req.params;
 
     ClothingItem.findByIdAndUpdate(
@@ -81,7 +81,7 @@ const likeItem = (req, res) => {
         });
 };
 // Dislike an item
-const dislikeItem = (req, res) => {
+const dislikeItem = (req, res, next) => {
     const { itemId } = req.params;
     ClothingItem.findByIdAndUpdate(
         itemId,

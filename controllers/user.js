@@ -12,7 +12,7 @@ const { ConflictError } = require("../utils/errors/ConflictError");
 // 11000 needs to be set?
 
 // Create
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
     const { name, avatar, email, password } = req.body;
     // Hash passwords via bycrpt
     return bcrypt
@@ -47,7 +47,7 @@ const createUser = (req, res) => {
 };
 
 // Return one user
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
     // If accessible after authorization (auth)
     User.findById(req.user._id)
         .then((user) => {
@@ -67,7 +67,7 @@ const getCurrentUser = (req, res) => {
 };
 
 // Get & authenticate 2 fields
-const login = (req, res) => {
+const login = (req, res, next) => {
     // Get email & password from request body
     const { email, password } = req.body;
 
@@ -91,7 +91,7 @@ const login = (req, res) => {
 };
 
 // Update profie
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
     const { name, avatar } = req.body;
     // Id is availabe after auth.
     User.findByIdAndUpdate(
