@@ -2,9 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors"); // Connect front & back end
+const { errors } = require("celebrate");
+
 const { login, createUser } = require("./controllers/user");
 const ErrorHandler = require("./middlewares/ErrorHandler");
-const { errors } = require("celebrate");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 const {
     createUserValidation,

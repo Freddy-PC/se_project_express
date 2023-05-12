@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs"); // hash
 const jwt = require("jsonwebtoken"); // token
 require("dotenv").config();
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const User = require("../models/user");
@@ -27,7 +28,7 @@ const createUser = (req, res, next) => {
                 })
                 .catch((err) => {
                     // Check for duplicate email (409)
-                    // A duplicate email can still be made???
+                    // A duplicate acccount with same email can still be made???
                     if (err.code === 11000) {
                         next(
                             new ConflictError("User with email already exists")

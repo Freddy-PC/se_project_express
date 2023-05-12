@@ -8,7 +8,7 @@ const { NotFoundError } = require("../utils/errors/NotFoundError");
 router.use("/items", clothingItem); // API call to items from model and routes
 router.use("/users", user);
 
-router.use(auth, (req, res) => {
+router.use(auth, (req, res, next) => {
     // If no route is found (404)
     next(new NotFoundError("Route not found"));
 });
