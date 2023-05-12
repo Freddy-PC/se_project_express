@@ -40,6 +40,8 @@ const userSchema = new mongoose.Schema({
     },
 });
 
+const UnauthorizedError = require("../utils/errors/UnauthorizedError");
+
 // authentification handler for user schema
 userSchema.statics.findUserByCredentials = function findUserByCredentials(
     email,
@@ -50,14 +52,16 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
         .then((user) => {
             // this = User model
             if (!user) {
-                return Promise.reject(new Error("Incorrect email or password"));
+                return Promise.reject(
+                    new UnauthorizedError("Incorrect email or password")
+                );
             }
 
             // found - comparing hashes + error handling
             return bcrypt.compare(password, user.password).then((matched) => {
                 if (!matched) {
                     return Promise.reject(
-                        new Error("Incorrect email or password")
+                        new UnauthorizedError("Incorrect email or password")
                     );
                 }
 
