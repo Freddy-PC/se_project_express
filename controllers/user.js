@@ -5,11 +5,10 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 const User = require("../models/user");
 
-const { BadRequestError } = require("../utils/errors/BadRequestError");
-const { UnauthorizedError } = require("../utils/errors/UnauthorizedError");
-const { NotFoundError } = require("../utils/errors/NotFoundError");
-const { ConflictError } = require("../utils/errors/ConflictError");
-// 11000 needs to be set?
+const BadRequestError = require("../utils/errors/BadRequestError");
+const UnauthorizedError = require("../utils/errors/UnauthorizedError");
+const NotFoundError = require("../utils/errors/NotFoundError");
+const ConflictError = require("../utils/errors/ConflictError");
 
 // Create
 const createUser = (req, res, next) => {
@@ -28,8 +27,8 @@ const createUser = (req, res, next) => {
                 })
                 .catch((err) => {
                     // Check for duplicate email (409)
+                    // A duplicate email can still be made???
                     if (err.code === 11000) {
-                        console.log(err.code === 11000);
                         next(
                             new ConflictError("User with email already exists")
                         );

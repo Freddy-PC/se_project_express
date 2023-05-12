@@ -1,8 +1,8 @@
 const ClothingItem = require("../models/clothingItem");
 
-const { BadRequestError } = require("../utils/errors/BadRequestError");
-const { ForbiddenError } = require("../utils/errors/ForbiddenError");
-const { NotFoundError } = require("../utils/errors/NotFoundError");
+const BadRequestError = require("../utils/errors/BadRequestError");
+const ForbiddenError = require("../utils/errors/ForbiddenError");
+const NotFoundError = require("../utils/errors/NotFoundError");
 
 // Create card
 const createItem = (req, res, next) => {

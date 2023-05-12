@@ -40,7 +40,7 @@ const createUserValidation = celebrate({
             "string.empty": 'The "imageUrl" field must be filled in',
             "string.uri": 'The "imageUrl" field must be a valid url',
         }),
-        email: Joi.string().required().messages({
+        email: Joi.string().required().email().messages({
             "string.empty": 'The "email" field must be filled in',
             "string.email": 'The "email" field must be a valid email',
         }),
