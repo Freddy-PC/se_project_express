@@ -1,9 +1,10 @@
-# WTWR Part 2/2 (What to Wear?): Back End
+# WTWR (What to Wear?) Part 2/2: Back End
 
 ## Overview
 
 -   Project Purpose
--   Access the application
+-   How to access the Application
+-   Part 1/2: The Front-End
 -   Tech & Techniques
 
 **Project Purpose**
@@ -14,7 +15,16 @@ The main goal is to create a server with an API and user authorization system th
 
 **Access the application**
 
-You can visit the app's page at [HERE!](https://wtwrpc.epicgamer.org)
+You can visit the webpage by [Clicking Here!](https://wtwrpc.epicgamer.org)
+Or copy any of these addresses into your search bar:
+
+1. wtwrpc.epicgamer.org
+2. www.wtwrpc.epicgamer.org
+
+**Part 1/2: The Front-End**
+
+The user interface allows users to interact with the application thanks to a Front-End.
+You can access the Front-End Repo by [Clicking Here](https://github.com/Freddy-PC/se_project_react)!
 
 **Tech & Techniques**
 
